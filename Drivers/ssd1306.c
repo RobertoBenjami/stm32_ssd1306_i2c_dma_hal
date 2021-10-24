@@ -10,8 +10,12 @@
  *      Author: Roberto Benjami
  *  Added features in DMA mode:
  *  - ssd1306_UpdateScreen works without blocking
- *  - You can query that UpdateScreen is complete (if ssd1306_UpdateScreenCompleted() == 1)
- *  - Callback function if UpdateScreen is complete (ssd1306_UpdateCompletedCallback)
+ *  - you can query that UpdateScreen is complete (if ssd1306_UpdateScreenCompleted() == 1)
+ *  - callback function if UpdateScreen is complete (ssd1306_UpdateCompletedCallback)
+ *  Added features in DMA mode with continuous display update:
+ *  - enable continuous display update
+ *  - disable continuous display update
+ *  - enable raster interrupt(s) of PAGEx (you can set which PAGE(s) )
  */
 
 #include <math.h>
