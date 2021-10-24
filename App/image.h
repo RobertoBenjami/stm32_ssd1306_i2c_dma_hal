@@ -1,10 +1,3 @@
-/*
- * image.h
- *
- *  Created on: 10 квіт. 2019 р.
- *      Author: Andriy
- */
-
 #ifndef IMAGE_H_
 #define IMAGE_H_
 
