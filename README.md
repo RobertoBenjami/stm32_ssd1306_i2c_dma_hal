@@ -10,6 +10,7 @@ The driver can work in 3 modes
 - Set I2C to I2C mode
 - I2C Speed: Standard mode
 - I2C Clock: 100000
+
 If DMA mode is also used
 - I2Cx_TX: memory to peripheral
 - Mode: normal
