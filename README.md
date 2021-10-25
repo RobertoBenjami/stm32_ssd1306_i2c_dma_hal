@@ -16,6 +16,7 @@ If DMA mode is also used
 - Mode: normal
 - Increment address: memory on
 - Data Width: byte, byte
+- NVIC I2Cx event interrupt enabled
 
 (please see the examples)
 
