@@ -24,8 +24,8 @@ The drawing functions work in the screen buffer memory, but the contents of the 
 It is possible to request interrupts with the callback function when the DMA transmission is in a certain area of the display. Use the ssd1306_SetRasterInt function to set which display memory page you want to interrupt. The interrupt function must be named ssd1306_RasterIntCallback.
 The 64-line display contains 8 memory pages and the 32-row display contains 4 memory pages (see the ssd1306 chip data sheet).
 
-## Settings
-- In cubemx, set I2C to I2C mode
+## Settings in CubeMX or CubeIDE
+- Set I2C to I2C mode
 - I2C Speed: Standard mode
 - I2C Clock: 100000
 If DMA mode is also used
