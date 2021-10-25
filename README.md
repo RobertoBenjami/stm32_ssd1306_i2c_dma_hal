@@ -28,12 +28,12 @@ If DMA mode is also used
 ## Without DMA 
 (#define SSD1306_USE_DMA 0, #define SSD1306_CONTUPDATE 0)
 
-The drawing functions work in the screen buffer memory. The ssd1306_UpdateScreen function then transmits it to the display. It will not exit this function until you have completed the transfer.
+The drawing functions work in the screen buffer memory. The ssd1306_UpdateScreen function then transmits it to the display. It will not exit this function until it has completed the transfer.
 
 ## With DMA 
 (#define SSD1306_USE_DMA 1, #define SSD1306_CONTUPDATE 0)
 
-The drawing functions work in the screen buffer memory. The ssd1306_UpdateScreen function then transmits it to the display. The Update function only starts the transfer, the transfer is done with DMA in the background. If you redraw in the screen buffer before the transfer is complete, it is possible that the contents of the modified screen buffer will only be partially transferred to the display. In this case, use the update function again to completely transfer the contents of the current screen buffer to the display. With the update function, it is not necessary to wait for the end of the previous update DMA transmission, we can use it at any time.
+The drawing functions work in the screen buffer memory. The ssd1306_UpdateScreen function then transmits it to the display. The Update function only starts the transfer, the transfer is done with DMA in the background. If you redraw in the screen buffer before the transfer is complete, it is possible that the contents of the modified screen buffer will only be partially transferred to the display. In this case, use the update function again to completely transfer the contents of the current screen buffer to the display. With the update function, it is not necessary to wait for the end of the previous update DMA transmission, you can use it at any time.
 It is possible to query if the DMA transfer is complete (ssd1306_UpdateScreenCompleted). You can also use a callback function to detect the end of a DMA transmission (ssd1306_UpdateCompletedCallback).
 
 ## Continuous update with DMA 
