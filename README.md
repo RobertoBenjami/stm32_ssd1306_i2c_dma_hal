@@ -1,6 +1,10 @@
 # stm32 ssd1306 i2c driver
 
-The driver can work in 3 modes
+The original source: https://github.com/taburyak/STM32_OLED_SSD1306_HAL_DMA
+
+I modified this a bit.
+
+The driver can work in 3 modes:
 
 ## Without DMA 
 (#define SSD1306_USE_DMA 0, #define SSD1306_CONTUPDATE 0)
