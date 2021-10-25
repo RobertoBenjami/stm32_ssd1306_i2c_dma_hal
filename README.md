@@ -33,5 +33,6 @@ If DMA mode is also used
 - Mode: normal
 - Increment address: memory on
 - Data Width: byte, byte
+
 (please see the examples)
 
