@@ -33,8 +33,6 @@ static uint8_t SSD1306_Buffer[SSD1306_BUFFER_SIZE];
 // SSD1306 display geometry
 SSD1306_Geometry display_geometry = SSD1306_GEOMETRY;
 
-static void ssd1306_WriteCommand(uint8_t command);
-
 //
 //  Get a width and height screen size
 //
@@ -782,44 +780,6 @@ void ssd1306_SetCursor(uint8_t x, uint8_t y)
   SSD1306.CurrentY = y;
 }
 
-void ssd1306_DisplayOn(void)
-{
-  ssd1306_WriteCommand(DISPLAYON);
-}
-
-void ssd1306_DisplayOff(void)
-{
-  ssd1306_WriteCommand(DISPLAYOFF);
-}
-
-void ssd1306_InvertDisplay(void)
-{
-  ssd1306_WriteCommand(INVERTDISPLAY);
-}
-
-void ssd1306_NormalDisplay(void)
-{
-  ssd1306_WriteCommand(NORMALDISPLAY);
-}
-
-void ssd1306_ResetOrientation()
-{
-  ssd1306_WriteCommand(SEGREMAP);
-  ssd1306_WriteCommand(COMSCANINC);           //Reset screen rotation or mirroring
-}
-
-void ssd1306_FlipScreenVertically()
-{
-  ssd1306_WriteCommand(SEGREMAP | 0x01);
-  ssd1306_WriteCommand(COMSCANDEC);           //Rotate screen 180 Deg
-}
-
-void ssd1306_MirrorScreen()
-{
-  ssd1306_WriteCommand(SEGREMAP);
-  ssd1306_WriteCommand(COMSCANDEC);           //Mirror screen
-}
-
 void ssd1306_Clear()
 {
   memset(SSD1306_Buffer, 0, SSD1306_BUFFER_SIZE);
@@ -830,12 +790,12 @@ void ssd1306_Clear()
 //
 //  Send a byte to the command register
 //
-static void ssd1306_WriteCommand(uint8_t command)
+void ssd1306_WriteCommand(uint8_t command)
 {
   HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &command, 1, 10);
 }
 
-static void ssd1306_WriteData(uint8_t* data, uint16_t size)
+void ssd1306_WriteData(uint8_t* data, uint16_t size)
 {
   HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, data, size, 100);
 }
@@ -865,7 +825,7 @@ volatile uint8_t ssd1306_updateend;
 //
 //  Send a byte to the command register
 //
-static void ssd1306_WriteCommand(uint8_t command)
+void ssd1306_WriteCommand(uint8_t command)
 {
   while(ssd1306_updatestatus);
   while(HAL_I2C_GetState(&SSD1306_I2C_PORT) != HAL_I2C_STATE_READY) { };
@@ -945,7 +905,7 @@ volatile uint8_t ssd1306_RasterIntRegs = 0;
 //
 //  Send a byte to the command register
 //
-static void ssd1306_WriteCommand(uint8_t command)
+void ssd1306_WriteCommand(uint8_t command)
 {
   if(ssd1306_updatestatus)
   {

@@ -132,20 +132,25 @@ void ssd1306_DrawProgressBar(uint16_t x, uint16_t y, uint16_t width, uint16_t he
 char ssd1306_WriteChar(char ch, FontDef Font);
 char ssd1306_WriteString(char* str, FontDef Font);
 void ssd1306_SetCursor(uint8_t x, uint8_t y);
-void ssd1306_DisplayOn(void);
-void ssd1306_DisplayOff(void);
-void ssd1306_InvertDisplay(void);
-void ssd1306_NormalDisplay(void);
-void ssd1306_ResetOrientation(void);
-void ssd1306_FlipScreenVertically(void);
-void ssd1306_MirrorScreen(void);
 void ssd1306_Clear(void);
+
+void ssd1306_WriteCommand(uint8_t command);
+
+#define ssd1306_DisplayOn()             ssd1306_WriteCommand(DISPLAYON)
+#define ssd1306_DisplayOff()            ssd1306_WriteCommand(DISPLAYOFF)
+#define ssd1306_InvertDisplay()         ssd1306_WriteCommand(INVERTDISPLAY)
+#define ssd1306_NormalDisplay()         ssd1306_WriteCommand(NORMALDISPLAY)
+#define ssd1306_ResetOrientation()      { ssd1306_WriteCommand(SEGREMAP); ssd1306_WriteCommand(COMSCANINC); }
+#define ssd1306_FlipScreenVertically()  { ssd1306_WriteCommand(SEGREMAP | 0x01); ssd1306_WriteCommand(COMSCANDEC); }
+#define ssd1306_MirrorScreen()          { ssd1306_WriteCommand(SEGREMAP | 0x01); ssd1306_WriteCommand(COMSCANINC); }
+#define ssd1306_MirrorFlipScreen()      { ssd1306_WriteCommand(SEGREMAP); ssd1306_WriteCommand(COMSCANDEC); }
 
 #if  SSD1306_USE_DMA == 0
 void ssd1306_UpdateScreen(void);      /* copy the contents of the Screenbuffer (SSD1306_Buffer) to the display */
 #define ssd1306_UpdateScreenCompleted() 1
 #define ssd1306_ContUpdateEnable()
 #define ssd1306_ContUpdateDisable()
+#define ssd1306_SetRasterInt(r)
 #elif SSD1306_USE_DMA == 1
 #if   SSD1306_CONTUPDATE == 0
 void ssd1306_UpdateScreen(void);      /* copy the contents of the Screenbuffer (SSD1306_Buffer) to the display */
@@ -153,6 +158,7 @@ char ssd1306_UpdateScreenCompleted(void); /* asks if the update is already compl
 __weak void ssd1306_UpdateCompletedCallback(void); /* you can create a function for the end of the update (attention!: interrupt function) */
 #define ssd1306_ContUpdateEnable()
 #define ssd1306_ContUpdateDisable()
+#define ssd1306_SetRasterInt(r)
 #elif SSD1306_CONTUPDATE == 1
 #define ssd1306_UpdateScreen()
 #define ssd1306_UpdateScreenCompleted() 1

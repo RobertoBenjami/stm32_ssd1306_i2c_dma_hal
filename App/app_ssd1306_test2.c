@@ -167,11 +167,30 @@ void ssd1306_TestPolyline()
 
 void mainApp(void)
 {
+  uint8_t orientation = 1;
   ssd1306_Init();
-  ssd1306_FlipScreenVertically();
 
   while(1)
   {
+    if(orientation == 1)
+    {
+      ssd1306_ResetOrientation();
+    }
+    else if(orientation == 2)
+    {
+      ssd1306_FlipScreenVertically();
+    }
+    else if(orientation == 3)
+    {
+      ssd1306_MirrorScreen();
+    }
+    else if(orientation == 4)
+    {
+      ssd1306_MirrorFlipScreen();
+      orientation = 0;
+    }
+    orientation++;
+
     ssd1306_TestFPS();
     HAL_Delay(3000);
     ssd1306_TestBorder();
