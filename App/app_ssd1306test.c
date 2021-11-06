@@ -109,16 +109,16 @@ void drawCircle(void)
   //  ------|-----
   //   0100 | 1000
   //
-  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0b00000001);
+  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0x01 /*0b00000001*/);
   ssd1306_UpdateScreen();
   HAL_Delay(200);
-  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0b00000011);
+  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0x03 /*0b00000011*/);
   ssd1306_UpdateScreen();
   HAL_Delay(200);
-  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0b00000111);
+  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0x07 /*0b00000111*/);
   ssd1306_UpdateScreen();
   HAL_Delay(200);
-  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0b00001111);
+  ssd1306_DrawCircleQuads(ssd1306_GetWidth() / 2, ssd1306_GetHeight() / 2, ssd1306_GetHeight() / 4, 0x0F /*0b00001111*/);
   ssd1306_UpdateScreen();
 }
 

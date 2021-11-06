@@ -3,7 +3,6 @@
 #include "main.h"
 
 #include "ssd1306.h"
-#include "image.h"
 
 extern I2C_HandleTypeDef hi2c1;
 
