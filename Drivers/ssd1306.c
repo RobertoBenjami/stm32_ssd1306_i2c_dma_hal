@@ -6,7 +6,7 @@
  *      Author: Andriy Honcharenko
  *      version: 2
  *
- *  Modify on: 22/10/2021
+ *  Modify on: 06/11/2021
  *      Author: Roberto Benjami
  *  Added features in DMA mode:
  *  - ssd1306_UpdateScreen works without blocking
@@ -19,7 +19,6 @@
  */
 
 #include <math.h>
-
 #include "ssd1306.h"
 
 #if SSD1306_USE_DMA == 0 && SSD1306_CONTUPDATE == 1
@@ -650,10 +649,10 @@ void ssd1306_DrawProgressBar(uint16_t x, uint16_t y, uint16_t width, uint16_t he
   uint16_t innerRadius = radius - 2;
 
   ssd1306_SetColor(White);
-  ssd1306_DrawCircleQuads(xRadius, yRadius, radius, 0b00000110);
+  ssd1306_DrawCircleQuads(xRadius, yRadius, radius, 0x06 /*0b00000110*/);
   ssd1306_DrawHorizontalLine(xRadius, y, width - doubleRadius + 1);
   ssd1306_DrawHorizontalLine(xRadius, y + height, width - doubleRadius + 1);
-  ssd1306_DrawCircleQuads(x + width - radius, yRadius, radius, 0b00001001);
+  ssd1306_DrawCircleQuads(x + width - radius, yRadius, radius, 0x09 /*0b00001001*/);
 
   uint16_t maxProgressWidth = (width - doubleRadius + 1) * progress / 100;
 
@@ -899,6 +898,7 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
 #elif SSD1306_CONTUPDATE == 1
 
 volatile uint8_t ssd1306_command = 0;
+volatile uint8_t i2c_command = 0;
 volatile uint8_t ssd1306_ContUpdate = 0;
 volatile uint8_t ssd1306_RasterIntRegs = 0;
 
@@ -915,20 +915,21 @@ void ssd1306_WriteCommand(uint8_t command)
   else
   {
     while(HAL_I2C_GetState(&SSD1306_I2C_PORT) != HAL_I2C_STATE_READY) { };
-    HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &command, 1);
+    i2c_command = command;
+    HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &i2c_command, 1);
   }
 }
 
 void ssd1306_ContUpdateEnable(void)
 {
-  uint8_t  command;
   if(!ssd1306_ContUpdate)
   {
-    ssd1306_ContUpdate = 1;
+    while(HAL_I2C_GetState(&SSD1306_I2C_PORT) != HAL_I2C_STATE_READY) { };
     ssd1306_updatestatus = SSD1306_HEIGHT;
     ssd1306_updateend = SSD1306_HEIGHT + (SSD1306_HEIGHT / 2);
-    command = 0xB0;
-    HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &command, 1);
+    i2c_command = 0xB0;
+    ssd1306_ContUpdate = 1;
+    HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &i2c_command, 1);
   }
 }
 
@@ -937,13 +938,13 @@ void ssd1306_ContUpdateDisable(void)
   if(ssd1306_ContUpdate)
   {
     ssd1306_ContUpdate = 0;
+    while(ssd1306_updatestatus) { };
   }
 }
 
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
   uint32_t phase;
-  uint8_t  command;
   uint8_t  raster;
   if(hi2c->Instance == SSD1306_I2C_PORT.Instance)
   {
@@ -963,26 +964,26 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
         else
         {
           if(phase == 0)
-            command = 0xB0 + ((ssd1306_updatestatus >> 2) & (SSD1306_HEIGHT / 8 - 1));
+            i2c_command = 0xB0 + ((ssd1306_updatestatus >> 2) & (SSD1306_HEIGHT / 8 - 1));
           else if(phase == 1)
-            command = SETLOWCOLUMN;
+            i2c_command = SETLOWCOLUMN;
           else if(phase == 2)
-            command = SETHIGHCOLUMN;
-          HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &command, 1);
+            i2c_command = SETHIGHCOLUMN;
+          HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &i2c_command, 1);
         }
       }
       else
       { /* refresh end */
         if(ssd1306_command)
         { /* command ? */
-          command = ssd1306_command;
+          i2c_command = ssd1306_command;
           ssd1306_command = 0;
         }
         else
         { /* refresh restart */
           if(ssd1306_ContUpdate)
           {
-            command = 0xB0;
+            i2c_command = 0xB0;
             ssd1306_updatestatus = SSD1306_HEIGHT;
           }
           else
@@ -992,7 +993,7 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
         }
 
         if(ssd1306_updatestatus)
-          HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &command, 1);
+          HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &i2c_command, 1);
       }
     }
   }
