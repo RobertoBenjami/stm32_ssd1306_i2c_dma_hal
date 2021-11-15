@@ -23,7 +23,7 @@ If DMA mode is also used
 ## Settings in "ssd1306_defines.h"
 - #define SSD1306_I2C_PORT hi2c1 or hi2c2 or hi2c3 (which i2c are you using)
 - #define SSD1306_ADDRESS 0x3C
-- xdefine SSD1306_128X64 or SSD1306_128X32 (Your display is 64 or 32 lines)
+- #define SSD1306_128X64 or SSD1306_128X32 (Your display is 64 or 32 lines)
 - #define SSD1306_USE_DMA 0 or 1 (not use or use the DMA)
 - #define SSD1306_CONTUPDATE 0 or 1 (display update mode in DMA mode)
 
