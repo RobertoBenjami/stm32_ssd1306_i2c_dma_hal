@@ -4,8 +4,6 @@
 
 #include "ssd1306.h"
 
-extern I2C_HandleTypeDef hi2c1;
-
 volatile uint8_t rast = 0;
 
 void ssd1306_RasterIntCallback(uint8_t r)

@@ -4,8 +4,6 @@
 
 #include "ssd1306.h"
 
-extern I2C_HandleTypeDef hi2c1;
-
 void ssd1306_TestBorder()
 {
   ssd1306_SetColor(Black);
